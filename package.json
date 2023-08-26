@@ -1,0 +1,30 @@
+{
+  "name": "cms-expressjs-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SerlockWright/cms-expressjs-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SerlockWright/cms-expressjs-service/issues"
+  },
+  "homepage": "https://github.com/SerlockWright/cms-expressjs-service#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
+    "mongodb": "^5.8.1",
+    "mongoose": "^7.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
