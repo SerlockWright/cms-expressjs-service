@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../model/User');
+const { generateAccessToken, generateRefresherToken } = require('../helpers');
 
 // @route    GET /api/users
 // @desc     Get all users
@@ -169,6 +171,7 @@ router.post('/login', async (req, res) => {
     return
   }
 
+  // create token
   const payload = {
     user: {
       first_name: user.first_name,
@@ -177,11 +180,88 @@ router.post('/login', async (req, res) => {
     }
   }
 
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefresherToken(payload);
+
   res.status(200).json({
-    data: payload,
+    data: {
+      accessToken, 
+      refreshToken
+    },
     isSuccess: true
   })
 })
+
+// @route    POST /api/users/verify
+// @desc     Verify user
+// @access   public
+router.post('/verify', async (req, res) => {
+  const { accessToken } = req.body;
+
+  // check token
+  if(!accessToken) {
+    res.status(400).json({
+      msg: 'Invalid token',
+      isSuccess: false
+    })
+    return
+  }
+
+  try {
+    const user = jwt.verify(accessToken, process.env.SECRET_KEY);
+    res.status(200).json({
+      user,
+      isSuccess: true
+    })
+  } catch (e) {
+    res.status(400).json({
+      msg: 'Invalid token',
+      isSuccess: false
+    })
+  }
+})
+
+// @route    POST /api/users/refresh-token
+// @desc     Refresh token
+// @access   public
+router.post('/refresh-token', async (req, res) => {
+  const { refreshToken } = req.body;
+
+  // check token
+  if(!refreshToken) {
+    res.status(400).json({
+      msg: 'Invalid token',
+      isSuccess: false
+    })
+    return
+  }
+
+  jwt.verify(refreshToken, process.env.SECRET_KEY, (err, user) => {
+    if(err) {
+      res.status(400).json({
+        msg: 'Invalid token',
+        isSuccess: false
+      })
+      return
+    }
+
+
+    // create and assign new accessToken
+    const payload = {
+      user
+    }
+    const accessToken = generateAccessToken(payload);
+    res.status(200).json({
+      msg: 'Refresh token successfully',
+      data: {
+        accessToken
+      },
+      isSuccess: true
+    })
+  })
+})
+
+
 
 module.exports = router;
 
