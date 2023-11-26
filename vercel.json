@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "cms-express-service",
+  "builds": [
+     { "src": "index.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+     { "src": "/api/(.*)", "dest": "/index.js" }
+  ]
+} 
