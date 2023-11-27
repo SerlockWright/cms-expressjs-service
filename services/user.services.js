@@ -12,7 +12,7 @@ module.exports = {
   },
 
   findEmail: async (email) => {
-    const user = await User.findById({ email });
+    const user = await User.findOne({ email });
     return user;
   },
 

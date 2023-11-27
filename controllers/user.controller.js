@@ -130,7 +130,7 @@ module.exports = {
 
   login: async (req, res) => {
     const { email, password } = req.body?.data || {};
-    
+
     // check email exist
     const user = await userSerivce.findEmail(email);
     if(!user) {
